@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="col-5">
+    <div class="row">
+      <div class="col-6">
+        <h2 [innerText]="driver.name"></h2>
+      </div>
+      <div class="col-6 text-right">
+        <div>Balance: <strong [innerText]="driver.wallet.amount + ' EVC'"></strong></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h4>My cars:</h4>
+        <ul class="list-group">
+          <li class="list-group-item" [class.active]="car.carId === selectedCar?.carId" *ngFor="let car of cars">
+            <div class="row m-0 justify-content-between">
+              <div class="col-auto p-0">
+                <span [innerText]="car.name"></span>
+              </div>
+              <div class="col-auto p-0">
+                <button class="btn btn-light" (click)="selectCar(car)">Select</button>
+                <button class="btn btn-light" (click)="deleteCar(car)">Delete</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <p [hidden]="cars?.length">
+          <small class="text-muted">No cars yet</small>
+        </p>
+        <div class="row mt-3">
+          <div class="col"><button class="btn btn-primary" (click)="addCar()">Add car</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-2 align-self-center text-center">
+    <button class="btn btn-danger" *ngIf="selectedCar && selectedStation">CHARGE</button>
+  </div>
+  <div class="col-5">
+    <h4>Charge stations nearby:</h4>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let station of stationsNearby" [class.active]="station.stationId === selectedStation?.stationId">
+        <div class="row m-0 justify-content-between">
+          <div class="col-auto p-0">
+            <span [innerText]="station.name"></span>
+            <span class="ml-5">
+              <span>Price:</span>&nbsp;
+              <strong>
+                <span [innerText]="station?.owner?.electricitySellPrice"></span>&nbsp;
+                <span>EVC/kWh</span>
+              </strong>
+            </span>
+          </div>
+          <div class="col-auto p-0">
+            <button class="btn btn-light" (click)="selectStation(station)">Select</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

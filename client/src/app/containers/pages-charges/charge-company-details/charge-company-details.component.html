@@ -1,0 +1,85 @@
+<div class="row justify-content-between">
+  <div class="col-5">
+    <div class="row">
+      <div class="col-6">
+        <h2 [innerText]="company.name"></h2>
+      </div>
+      <div class="col-6 text-right">
+        <div>Balance: <strong [innerText]="company.wallet.amount + ' EVC'"></strong></div>
+        <div>Electricity: <strong [innerText]="company.electricity.amount + ' kWh'"></strong></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h4>My charge stations:</h4>
+        <ul class="list-group">
+          <li class="list-group-item cursor-pointer" [class.active]="charge.carId === selectedChargeStation?.carId" *ngFor="let charge of chargeStations">
+            <div class="row m-0 justify-content-between">
+              <div class="col-auto p-0">
+                <span [innerText]="charge.name"></span>
+              </div>
+              <div class="col-auto p-0">
+                <button class="btn btn-light" (click)="deleteChargeStation(charge)">Delete</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <p [hidden]="chargeStations?.length">
+          <small class="text-muted">No charge stations yet</small>
+        </p>
+        <div class="row mt-3">
+          <div class="col">
+            <input type="text" class="form-control" [formControl]="newChargeStationName" placeholder="New car name">
+          </div>
+          <div class="col-auto"><button class="btn btn-primary" (click)="addChargeStation()">Add</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-2 border-left border-right">
+    <div class="form-group" *ngIf="!!selectedSupplier">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Buy</div>
+        </div>
+        <input type="number" class="form-control" [formControl]="buyElectricityAmount" min="0">
+        <div class="input-group-append">
+          <div class="input-group-text">kWh</div>
+        </div>
+      </div>
+      <div class="row mt-3 m-0 justify-content-between">
+        <div class="col-auto p-0">
+          Price:
+        </div>
+        <div class="col-auto p-0">
+          <strong [innerText]="buyElectricityAmount.value * selectedSupplier.electricitySellPrice"></strong>&nbsp;<strong>EVC</strong>
+        </div>
+      </div>
+      <div class="mt-3">
+        <button class="btn btn-danger w-100" (click)="buyElectricity()"><strong>Buy</strong></button>
+      </div>
+    </div>
+  </div>
+  <div class="col-5">
+    <h4>Available E-Suppliers:</h4>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let supplier of suppliers" [class.active]="supplier?.userId === selectedSupplier?.userId">
+        <div class="row m-0 justify-content-between">
+          <div class="col-auto p-0">
+            <span [innerText]="supplier.name"></span>
+            <span class="ml-5">
+              <span>Price:</span>&nbsp;
+              <strong>
+                <span [innerText]="supplier.electricitySellPrice"></span>&nbsp;
+                <span>EVC/kWh</span>
+              </strong>
+            </span>
+          </div>
+          <div class="col-auto p-0">
+            <button class="btn btn-light" (click)="selectSupplier(supplier)">Select</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

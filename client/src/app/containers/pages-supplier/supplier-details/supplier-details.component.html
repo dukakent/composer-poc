@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-5">
+    <div class="row">
+      <div class="col-6">
+        <h2 [innerText]="supplier?.name"></h2>
+      </div>
+      <div class="col-6 text-right">
+        <div>Balance: <strong [innerText]="supplier?.wallet?.amount + ' EVC'"></strong></div>
+        <div>Electricity: <strong [innerText]="supplier?.electricity?.amount + ' kWh'"></strong></div>
+        <div class="input-group mt-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Sell price:</span>
+          </div>
+          <input type="text" class="form-control" [formControl]="sellPrice" (change)="updateSupplier()">
+          <div class="input-group-append">
+            <span class="input-group-text"><strong>EVC/kWh</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

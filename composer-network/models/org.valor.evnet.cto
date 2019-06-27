@@ -1,0 +1,84 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+
+namespace org.valor.evnet
+
+abstract participant User identified by userId {
+  o String userId
+  o String name
+  o Double electricitySellPrice
+  --> EVCoinWallet wallet
+  --> ElectricityCounter electricity
+}
+
+participant ElectricitySupplier extends User {}
+participant ChargeStationOwner extends User {}
+participant Driver extends User {}
+
+asset ElectricityCounter identified by electricityId {
+  o String electricityId
+  o Double amount
+}
+
+asset EVCoinWallet identified by walletId {
+  o String walletId
+  o Double amount
+}
+
+asset ChargeStation identified by stationId {
+  o String stationId
+  o String name
+  --> ChargeStationOwner owner
+}
+
+asset Car identified by carId {
+  o String carId
+  o String name
+  o Integer batteryCapacity
+  o Integer chargeLeft
+  --> Driver owner
+}
+
+transaction SetElectricityPrice {
+  --> User seller
+  o Double newPrice
+}
+
+transaction BuyElectricity {
+  --> User seller
+  --> User buyer
+  o Double amount
+}
+
+transaction ChargeCar {
+  --> Car car
+  --> ChargeStation station
+  o Integer chargeGoal
+}
+
+transaction CreateDriver {
+  o String name
+}
+
+transaction CreateSupplier {
+  o String name
+}
+
+transaction CreateChargeStationOwner {
+  o String name
+}

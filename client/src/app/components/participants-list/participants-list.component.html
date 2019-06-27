@@ -1,0 +1,10 @@
+<nav class="nav nav-pills flex-column">
+  <button *ngFor="let participant of participants"
+          class="btn btn-link text-left nav-link"
+          [class.active]="selectedParticipant?.userId === participant?.userId"
+          (click)="selectParticipant(participant)"
+          [innerText]="participant.name"></button>
+</nav>
+<p [hidden]="participants?.length">
+  <small class="text-muted">No participants yet</small>
+</p>

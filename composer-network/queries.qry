@@ -1,0 +1,15 @@
+query selectCarsByOwnerId {
+  description: "Select cars of specific driver"
+  statement:
+    SELECT org.valor.evnet.Car
+      WHERE (owner == _$owner)
+      ORDER BY [name ASC]
+}
+
+query selectChargeStationsByOwnerId {
+  description: "Select charge stations of specific driver"
+  statement:
+    SELECT org.valor.evnet.ChargeStation
+      WHERE (owner == _$owner)
+      ORDER BY [name ASC]
+}
