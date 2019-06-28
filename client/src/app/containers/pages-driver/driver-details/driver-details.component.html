@@ -8,14 +8,20 @@
         <div>Balance: <strong [innerText]="driver.wallet.amount + ' EVC'"></strong></div>
       </div>
     </div>
-    <div class="row">
+    <div class="row mt-3 justify-content-between">
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="openBuyEVCoinsModal()">Buy EVCoins</button>
+      </div>
+    </div>
+    <div class="row mt-5">
       <div class="col-12">
         <h4>My cars:</h4>
         <ul class="list-group">
           <li class="list-group-item" [class.active]="car.carId === selectedCar?.carId" *ngFor="let car of cars">
             <div class="row m-0 justify-content-between">
               <div class="col-auto p-0">
-                <span [innerText]="car.name"></span>
+                <div><strong [innerText]="car.name"></strong></div>
+                <div>Charge: <span [innerText]="car.chargeLeft"></span>%</div>
               </div>
               <div class="col-auto p-0">
                 <button class="btn btn-light" (click)="selectCar(car)">Select</button>
@@ -28,7 +34,7 @@
           <small class="text-muted">No cars yet</small>
         </p>
         <div class="row mt-3">
-          <div class="col"><button class="btn btn-primary" (click)="addCar()">Add car</button></div>
+          <div class="col"><button class="btn btn-primary" (click)="openAddCarModal()">Add car</button></div>
         </div>
       </div>
     </div>

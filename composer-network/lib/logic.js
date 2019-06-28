@@ -197,6 +197,7 @@ async function createSupplier(tx) {
  */
 async function chargeCar(tx) {
   const evCoinWalletRegistry = await getAssetRegistry(`${namespace}.EVCoinWallet`);
+  const electricityRegistry = await getAssetRegistry(`${namespace}.ElectricityCounter`);
   const carRegistry = await getAssetRegistry(`${namespace}.Car`);
 
   const owner = tx.station.owner;
@@ -221,10 +222,12 @@ async function chargeCar(tx) {
 
   driver.wallet.amount = driver.wallet.amount - price;
   owner.wallet.amount = owner.wallet.amount + price;
+  owner.electricity.amount = owner.electricity.amount - amountToCharge;
   tx.car.chargeLeft = tx.chargeGoal;
 
   await evCoinWalletRegistry.update(driver.wallet);
   await evCoinWalletRegistry.update(owner.wallet);
+  await electricityRegistry.update(owner.electricity);
   await carRegistry.update(tx.car);
 }
 

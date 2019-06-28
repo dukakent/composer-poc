@@ -1,33 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { DriversService } from '../../../services/drivers.service';
-import { finalize } from 'rxjs/operators';
 import { ChargesService } from '../../../services/charges.service';
 import { BsModalService } from 'ngx-bootstrap';
 import { AddCarComponent } from '../../../components/add-car/add-car.component';
+import { BuyEVCoinsComponent } from '../../../components/buy-evcoins/buy-evcoins.component';
+import { Subscription } from 'rxjs';
+import { WalletService } from '../../../services/wallet.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-driver-details',
   templateUrl: './driver-details.component.html',
   styleUrls: ['./driver-details.component.scss']
 })
-export class DriverDetailsComponent {
+export class DriverDetailsComponent implements OnDestroy {
   driver: any | null = null;
   cars: any[] = [];
   stationsNearby: any[] = [];
 
-  newCarName = new FormControl('');
-  disableAddCar = false;
-
   selectedCar: any | null = null;
   selectedStation: any | null = null;
+
+  sellPrice = new FormControl(1, [Validators.min(1)]);
+
+  internalSubscriptions = new Subscription();
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly driversService: DriversService,
     private readonly chargesService: ChargesService,
-    private readonly modalService: BsModalService
+    private readonly modalService: BsModalService,
+    private readonly walletService: WalletService
   ) {
     this.chargesService.getCharges().subscribe((charges: any[]) => this.stationsNearby = charges);
 
@@ -37,21 +42,27 @@ export class DriverDetailsComponent {
     });
   }
 
-  addCar() {
-    this.modalService.show(AddCarComponent);
+  ngOnDestroy(): void {
+    this.internalSubscriptions.unsubscribe();
+  }
 
-    // if (!this.newCarName.value) { return; }
-    //
-    // this.disableAddCar = true;
-    //
-    // this.driversService.addCar(this.newCarName.value, this.driver.userId)
-    //   .pipe(
-    //     finalize(() => this.disableAddCar = false)
-    //   )
-    //   .subscribe(() => {
-    //     this.newCarName.patchValue('');
-    //     this.refreshCars();
-    //   });
+  openAddCarModal() {
+    const modalRef = this.modalService.show(AddCarComponent);
+
+    const sub = modalRef.content.addCarSubmit.subscribe(value => {
+      this.addCar(value);
+      this.modalService.hide(1);
+    });
+
+    this.modalService.onHidden.pipe(take(1)).subscribe(() => sub.unsubscribe());
+  }
+
+  addCar(data: any) {
+    data.chargeLeft = 0;
+
+    this.driversService.addCar(this.driver.userId, data).subscribe(() => {
+      this.refreshCars();
+    });
   }
 
   deleteCar(car) {
@@ -78,5 +89,44 @@ export class DriverDetailsComponent {
 
   selectStation(station) {
     this.selectedStation = this.selectedStation && this.selectedStation.stationId === station.stationId ? null : station;
+  }
+
+  openBuyEVCoinsModal() {
+    const modalRef = this.modalService.show(BuyEVCoinsComponent);
+
+    const sub = modalRef.content.submit.subscribe(newAmount => {
+      this.updateWallet(newAmount);
+      this.modalService.hide(1);
+    });
+
+    this.modalService.onHidden.pipe(take(1)).subscribe(() => sub.unsubscribe());
+  }
+
+  updateDriver() {
+    const electricitySellPrice = this.sellPrice.value;
+
+    const data: any = {
+      name: this.driver.name,
+      wallet: `resource:org.valor.evnet.EVCoinWallet#${this.driver.wallet.walletId}`,
+      electricity: `resource:org.valor.evnet.ElectricityCounter#${this.driver.electricity.electricityId}`,
+      electricitySellPrice
+    };
+
+    delete data.userId;
+    delete data.$class;
+
+    this.driversService
+      .updateDriver(this.driver.userId, data)
+      .subscribe();
+  }
+
+  updateWallet(newAmount) {
+    const data = {
+      amount: +this.driver.wallet.amount + newAmount
+    };
+
+    this.walletService.updateWallet(this.driver.wallet.walletId, data).subscribe(() => {
+      this.driver.wallet.amount = data.amount;
+    });
   }
 }

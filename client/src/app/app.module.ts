@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { COMPONENTS } from './components';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AddCarComponent } from './components/add-car/add-car.component';
+import { BuyEVCoinsComponent } from './components/buy-evcoins/buy-evcoins.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,6 @@ import { AddCarComponent } from './components/add-car/add-car.component';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [AddCarComponent]
+  entryComponents: [AddCarComponent, BuyEVCoinsComponent]
 })
 export class AppModule { }

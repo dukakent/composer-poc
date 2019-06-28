@@ -9,7 +9,23 @@
         <div>Electricity: <strong [innerText]="company.electricity.amount + ' kWh'"></strong></div>
       </div>
     </div>
-    <div class="row">
+    <div class="row mt-3 justify-content-between">
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="openBuyEVCoinsModal()">Buy EVCoins</button>
+      </div>
+      <div class="col-auto">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Sell price:</span>
+          </div>
+          <input type="number" min="1" class="form-control" [formControl]="sellPrice" (change)="updateCompany()">
+          <div class="input-group-append">
+            <span class="input-group-text"><strong>EVC/kWh</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
       <div class="col-12">
         <h4>My charge stations:</h4>
         <ul class="list-group">

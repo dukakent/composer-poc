@@ -83,4 +83,8 @@ export class ChargesService {
 
     return this.http.get(`${environment.blockchainServer}/queries/selectChargeStationsByOwnerId`, {params});
   }
+
+  updateCompany(id: string, data: any) {
+    return this.http.put(`${environment.blockchainServer}/ChargeStationOwner/${id}`, data);
+  }
 }

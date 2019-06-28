@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ChargesService } from '../../../services/charges.service';
 import { BuyElectricityService } from '../../../services/buy-electricity.service';
+import { BuyEVCoinsComponent } from '../../../components/buy-evcoins/buy-evcoins.component';
+import { BsModalService } from 'ngx-bootstrap';
+import { WalletService } from '../../../services/wallet.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-charge-company-details',
@@ -21,14 +25,19 @@ export class ChargeCompanyDetailsComponent {
 
   buyElectricityAmount = new FormControl(0);
 
+  sellPrice = new FormControl(1, [Validators.min(1)]);
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly chargesService: ChargesService,
-    private readonly buyElectricityService: BuyElectricityService
+    private readonly buyElectricityService: BuyElectricityService,
+    private readonly modalService: BsModalService,
+    private readonly walletService: WalletService
   ) {
     this.route.data.subscribe(data => {
       this.company = data.chargeStationOwner;
       this.suppliers = data.suppliers;
+      this.sellPrice.reset(this.company.electricitySellPrice);
       this.refreshChargeStations();
     });
   }
@@ -77,5 +86,44 @@ export class ChargeCompanyDetailsComponent {
       this.selectedSupplier.userId,
       this.company.userId, +amount
     ).subscribe();
+  }
+
+  updateCompany() {
+    const electricitySellPrice = this.sellPrice.value;
+
+    const data: any = {
+      name: this.company.name,
+      wallet: `resource:org.valor.evnet.EVCoinWallet#${this.company.wallet.walletId}`,
+      electricity: `resource:org.valor.evnet.ElectricityCounter#${this.company.electricity.electricityId}`,
+      electricitySellPrice
+    };
+
+    delete data.userId;
+    delete data.$class;
+
+    this.chargesService
+      .updateCompany(this.company.userId, data)
+      .subscribe();
+  }
+
+  openBuyEVCoinsModal() {
+    const modalRef = this.modalService.show(BuyEVCoinsComponent);
+
+    const sub = modalRef.content.submit.subscribe(newAmount => {
+      this.updateWallet(newAmount);
+      this.modalService.hide(1);
+    });
+
+    this.modalService.onHidden.pipe(take(1)).subscribe(() => sub.unsubscribe());
+  }
+
+  updateWallet(newAmount) {
+    const data = {
+      amount: +this.company.wallet.amount + newAmount
+    };
+
+    this.walletService.updateWallet(this.company.wallet.walletId, data).subscribe(() => {
+      this.company.wallet.amount = data.amount;
+    });
   }
 }

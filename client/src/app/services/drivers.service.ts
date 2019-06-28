@@ -50,10 +50,10 @@ export class DriversService {
     });
   }
 
-  addCar(name: string, ownerId: string) {
+  addCar(ownerId: string, data: any) {
     return this.http.post(`${environment.blockchainServer}/Car`, {
       carId: randomId(),
-      name,
+      ...data,
       owner: `resource:org.valor.evnet.Driver#${ownerId}`
     });
   }
@@ -68,5 +68,9 @@ export class DriversService {
     };
 
     return this.http.get(`${environment.blockchainServer}/queries/selectCarsByOwnerId`, {params});
+  }
+
+  updateDriver(id: string, data: any) {
+    return this.http.put(`${environment.blockchainServer}/Driver/${id}`, data);
   }
 }

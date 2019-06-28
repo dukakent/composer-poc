@@ -7,11 +7,18 @@
       <div class="col-6 text-right">
         <div>Balance: <strong [innerText]="supplier?.wallet?.amount + ' EVC'"></strong></div>
         <div>Electricity: <strong [innerText]="supplier?.electricity?.amount + ' kWh'"></strong></div>
-        <div class="input-group mt-3">
+      </div>
+    </div>
+    <div class="row mt-3 justify-content-between">
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="openBuyEVCoinsModal()">Buy EVCoins</button>
+      </div>
+      <div class="col-auto">
+        <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text">Sell price:</span>
           </div>
-          <input type="text" class="form-control" [formControl]="sellPrice" (change)="updateSupplier()">
+          <input type="number" min="1" class="form-control" [formControl]="sellPrice" (change)="updateSupplier()">
           <div class="input-group-append">
             <span class="input-group-text"><strong>EVC/kWh</strong></span>
           </div>
