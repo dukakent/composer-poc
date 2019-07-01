@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-12">
+    <div class="form-group">
+      <input type="range" class="form-control-range" min="car.chargeLeft" max="100" [formControl]="chargeGoalControl">
+    </div>
+    <div>
+
+    </div>
+  </div>
+</div>
+<div class="row justify-content-between">
+  <div class="col-auto">Electricity:</div>
+  <div class="col-auto">
+    <strong>
+      <span [innerText]="neededElectricity"></span> kWh
+    </strong>
+  </div>
+</div>
+<div class="row justify-content-between">
+  <div class="col-auto">Price:</div>
+  <div class="col-auto">
+    <strong>
+      <span [innerText]="neededPrice"></span> EVC
+    </strong>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <button class="btn btn-danger w-100">Charge</button>
+  </div>
+</div>

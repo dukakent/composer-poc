@@ -25,6 +25,8 @@ export class DriverDetailsComponent implements OnDestroy {
 
   sellPrice = new FormControl(1, [Validators.min(1)]);
 
+  chargeGoal = new FormControl(0, [Validators.required, Validators.min(0), Validators.max(100)])
+
   internalSubscriptions = new Subscription();
 
   constructor(
@@ -89,6 +91,12 @@ export class DriverDetailsComponent implements OnDestroy {
 
   selectStation(station) {
     this.selectedStation = this.selectedStation && this.selectedStation.stationId === station.stationId ? null : station;
+  }
+
+  setChargeGoal() {
+    if (!this.selectedCar || !this.selectStation) { return; }
+  
+    this.chargeGoal.reset(this.selectedCar);
   }
 
   openBuyEVCoinsModal() {

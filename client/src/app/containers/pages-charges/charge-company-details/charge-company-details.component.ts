@@ -25,8 +25,6 @@ export class ChargeCompanyDetailsComponent {
 
   buyElectricityAmount = new FormControl(0);
 
-  sellPrice = new FormControl(1, [Validators.min(1)]);
-
   constructor(
     private readonly route: ActivatedRoute,
     private readonly chargesService: ChargesService,
@@ -37,7 +35,6 @@ export class ChargeCompanyDetailsComponent {
     this.route.data.subscribe(data => {
       this.company = data.chargeStationOwner;
       this.suppliers = data.suppliers;
-      this.sellPrice.reset(this.company.electricitySellPrice);
       this.refreshChargeStations();
     });
   }
@@ -88,14 +85,12 @@ export class ChargeCompanyDetailsComponent {
     ).subscribe();
   }
 
-  updateCompany() {
-    const electricitySellPrice = this.sellPrice.value;
-
+  changeSellPrice(newValue: number) {
     const data: any = {
       name: this.company.name,
       wallet: `resource:org.valor.evnet.EVCoinWallet#${this.company.wallet.walletId}`,
       electricity: `resource:org.valor.evnet.ElectricityCounter#${this.company.electricity.electricityId}`,
-      electricitySellPrice
+      electricitySellPrice: newValue
     };
 
     delete data.userId;

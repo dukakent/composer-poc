@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-5">
+  <div class="col-12 col-lg-6">
     <div class="row">
       <div class="col-6">
         <h2 [innerText]="supplier?.name"></h2>
@@ -14,15 +14,7 @@
         <button class="btn btn-primary" (click)="openBuyEVCoinsModal()">Buy EVCoins</button>
       </div>
       <div class="col-auto">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Sell price:</span>
-          </div>
-          <input type="number" min="1" class="form-control" [formControl]="sellPrice" (change)="updateSupplier()">
-          <div class="input-group-append">
-            <span class="input-group-text"><strong>EVC/kWh</strong></span>
-          </div>
-        </div>
+        <app-change-sell-price [sellPrice]="supplier.electricitySellPrice" (sellPriceChange)="changeSellPrice($event)"></app-change-sell-price>
       </div>
     </div>
   </div>

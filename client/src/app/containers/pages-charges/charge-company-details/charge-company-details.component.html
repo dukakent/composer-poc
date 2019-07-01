@@ -14,15 +14,7 @@
         <button class="btn btn-primary" (click)="openBuyEVCoinsModal()">Buy EVCoins</button>
       </div>
       <div class="col-auto">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Sell price:</span>
-          </div>
-          <input type="number" min="1" class="form-control" [formControl]="sellPrice" (change)="updateCompany()">
-          <div class="input-group-append">
-            <span class="input-group-text"><strong>EVC/kWh</strong></span>
-          </div>
-        </div>
+        <app-change-sell-price [sellPrice]="company.electricitySellPrice" (sellPriceChange)="changeSellPrice($event)"></app-change-sell-price>
       </div>
     </div>
     <div class="row mt-3">

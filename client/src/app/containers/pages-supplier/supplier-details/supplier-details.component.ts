@@ -16,8 +16,6 @@ import { take } from 'rxjs/operators';
 export class SupplierDetailsComponent implements OnDestroy {
   supplier: any | null = null;
 
-  sellPrice = new FormControl(1, [Validators.min(1)]);
-
   internalSubscriptions = new Subscription();
 
   constructor(
@@ -28,7 +26,6 @@ export class SupplierDetailsComponent implements OnDestroy {
   ) {
     this.route.data.subscribe(data => {
       this.supplier = data.supplier;
-      this.sellPrice.reset(this.supplier.electricitySellPrice);
     });
   }
 
@@ -36,14 +33,12 @@ export class SupplierDetailsComponent implements OnDestroy {
     this.internalSubscriptions.unsubscribe();
   }
 
-  updateSupplier() {
-    const electricitySellPrice = this.sellPrice.value;
-
+  changeSellPrice(newSellPrice: number) {
     const data: any = {
       name: this.supplier.name,
       wallet: `resource:org.valor.evnet.EVCoinWallet#${this.supplier.wallet.walletId}`,
       electricity: `resource:org.valor.evnet.ElectricityCounter#${this.supplier.electricity.electricityId}`,
-      electricitySellPrice
+      electricitySellPrice: newSellPrice
     };
 
     delete data.userId;

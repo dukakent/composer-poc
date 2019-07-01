@@ -40,7 +40,9 @@
     </div>
   </div>
   <div class="col-2 align-self-center text-center">
-    <button class="btn btn-danger" *ngIf="selectedCar && selectedStation">CHARGE</button>
+    <div *ngIf="selectedCar && selectedStation">
+      <app-charge-car [car]="selectedCar" [chargeStation]="selectedStation"></app-charge-car>
+    </div>
   </div>
   <div class="col-5">
     <h4>Charge stations nearby:</h4>

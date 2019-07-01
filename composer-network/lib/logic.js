@@ -202,8 +202,8 @@ async function chargeCar(tx) {
 
   const owner = tx.station.owner;
   const driver = tx.car.owner;
-  const currentChargeLevel = tx.car.batteryCapacity * tx.car.chargeLeft;
-  const goalChargeLevel = tx.car.batteryCapacity * tx.chargeGoal;
+  const currentChargeLevel = tx.car.batteryCapacity * tx.car.chargeLeft / 100;
+  const goalChargeLevel = tx.car.batteryCapacity * tx.chargeGoal / 100;
   const amountToCharge = goalChargeLevel - currentChargeLevel;
   const price = amountToCharge * owner.electricitySellPrice;
 

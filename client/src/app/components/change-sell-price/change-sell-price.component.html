@@ -1,0 +1,9 @@
+<div class="input-group">
+  <div class="input-group-prepend">
+    <span class="input-group-text">Sell price:</span>
+  </div>
+  <input type="number" min="1" class="form-control sell-price-input" [ngModel]="sellPrice" (blur)="onInputBlur($event)">
+  <div class="input-group-append">
+    <span class="input-group-text"><strong>EVC/kWh</strong></span>
+  </div>
+</div>
