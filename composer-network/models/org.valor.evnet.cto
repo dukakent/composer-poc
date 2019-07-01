@@ -18,67 +18,84 @@
 
 namespace org.valor.evnet
 
-abstract participant User identified by userId {
-  o String userId
-  o String name
-  o Double electricitySellPrice
-  --> EVCoinWallet wallet
-  --> ElectricityCounter electricity
+// abstract participant User identified by userId {
+//   o String userId
+//   o String name
+//   --> EVCoinWallet wallet
+// }
+
+// asset EVCoinWallet identified by walletId {
+//   o String walletId
+//   o Double amount
+// }
+
+// participant ElectricitySupplier extends User {
+//   o Integer power
+//   o Integer pricing
+// }
+// participant ChargeStationOwner extends User {}
+// participant Driver extends User {}
+
+// participant ChargeStation identified by stationId {
+//   o String stationId
+//   o String name
+//   o Integer power
+//   o Integer pricing
+//   --> ChargeStationOwner owner
+//   --> ElectricitySupplier supplier
+//   --> Car pluggedCar optional
+// }
+
+// participant Car identified by carId {
+//   o String carId
+//   o String name
+//   --> Driver owner
+// }
+
+// transaction CreateDriver {
+//   o String name
+// }
+
+// transaction CreateSupplier {
+//   o String name
+// }
+
+// transaction CreateChargeStationOwner {
+//   o String name
+// }
+
+// transaction ChargeCarStart {
+//   --> ChargeStation station
+// }
+
+// transaction ChargeCarStop {
+//   --> ChargeStation station
+// }
+
+// transaction ConsumeElectricityStart {
+//   --> ChargeStation station
+// }
+
+// transaction ConsumeElectricityStop {
+//   --> ChargeStation station
+// }
+
+participant ElectricityNode identified by nodeId {
+  o String nodeId
+  o Integer power
 }
 
-participant ElectricitySupplier extends User {}
-participant ChargeStationOwner extends User {}
-participant Driver extends User {}
-
-asset ElectricityCounter identified by electricityId {
-  o String electricityId
-  o Double amount
+asset Wire identified by wireId {
+  o String wireId
+  o ElectricityNode supplier
+  o ElectricityNode consumer
+  o Boolean enabled
 }
 
-asset EVCoinWallet identified by walletId {
-  o String walletId
-  o Double amount
+transaction ConsumeElectricityStart {
+  --> Wire wire
 }
 
-asset ChargeStation identified by stationId {
-  o String stationId
-  o String name
-  --> ChargeStationOwner owner
-}
-
-asset Car identified by carId {
-  o String carId
-  o String name
-  o Integer batteryCapacity
-  o Integer chargeLeft
-  --> Driver owner
-}
-
-transaction SetElectricityPrice {
-  --> User seller
-  o Double newPrice
-}
-
-transaction BuyElectricity {
-  --> User seller
-  --> User buyer
-  o Double amount
-}
-
-transaction ChargeCar {
-  --> Car car
-  --> ChargeStation station
-  o Integer chargeGoal
-}
-
-transaction CreateDriver {
-  o String name
-}
-
-transaction CreateSupplier {
-  o String name
-}
-
-transaction CreateChargeStationOwner {
-  o String name
+transaction ConsumeElectricityStop {
+  --> Wire wire
 }
