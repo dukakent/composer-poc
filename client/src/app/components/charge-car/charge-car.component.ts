@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
+import { FormControl, Validators } from '@angular/forms';
+import { ChargeCarService } from '../../services/charge-car.service';
 
 @Component({
   selector: 'app-charge-car',
@@ -15,6 +16,12 @@ export class ChargeCarComponent implements OnInit, OnChanges {
   neededElectricity = 0;
   neededPrice = 0;
 
+  constructor(
+    private readonly chargeCarService: ChargeCarService
+  ) {
+  }
+
+
   ngOnInit(): void {
     this.chargeGoalControl.valueChanges.subscribe(() => {
       const currentElectricity = this.car.batteryCapacity * this.car.chargeLeft / 100;
@@ -29,5 +36,15 @@ export class ChargeCarComponent implements OnInit, OnChanges {
     if ('car' in changes) {
       this.chargeGoalControl.reset(this.car.chargeLeft);
     }
+  }
+
+  submit() {
+    if (!this.chargeGoalControl.valid) { return; }
+
+    const chargeGoal = this.chargeGoalControl.value;
+
+    this.chargeCarService.chargeCar(this.car, this.chargeStation, chargeGoal).subscribe(() => {
+      this.car.chargeLeft = chargeGoal;
+    });
   }
 }

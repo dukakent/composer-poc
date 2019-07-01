@@ -203,9 +203,20 @@ async function chargeCar(tx) {
   const owner = tx.station.owner;
   const driver = tx.car.owner;
   const currentChargeLevel = tx.car.batteryCapacity * tx.car.chargeLeft / 100;
+
+  console.log(`@debug currentChargeLevel: `, currentChargeLevel);
+  
   const goalChargeLevel = tx.car.batteryCapacity * tx.chargeGoal / 100;
+  
+  console.log(`@debug goalChargeLevel: `, goalChargeLevel);
+  
   const amountToCharge = goalChargeLevel - currentChargeLevel;
+
+  console.log(`@debug amountToCharge: `, amountToCharge);
+  
   const price = amountToCharge * owner.electricitySellPrice;
+
+  console.log(`@debug price: `, price);
 
   if (tx.chargeGoal > 100) {
     throw new Error('charge goal must be a percentage value');
@@ -230,7 +241,6 @@ async function chargeCar(tx) {
   await electricityRegistry.update(owner.electricity);
   await carRegistry.update(tx.car);
 }
-
 
 function uuid() {
   return (Math.random() * 100000).toFixed();

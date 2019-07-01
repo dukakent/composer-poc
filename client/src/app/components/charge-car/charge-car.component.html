@@ -3,9 +3,14 @@
     <div class="form-group">
       <input type="range" class="form-control-range" min="car.chargeLeft" max="100" [formControl]="chargeGoalControl">
     </div>
-    <div>
-
-    </div>
+  </div>
+</div>
+<div class="row justify-content-between">
+  <div class="col-auto">Goal charge:</div>
+  <div class="col-auto">
+    <strong>
+      <span [innerText]="chargeGoalControl.value"></span>%
+    </strong>
   </div>
 </div>
 <div class="row justify-content-between">
@@ -26,6 +31,6 @@
 </div>
 <div class="row">
   <div class="col">
-    <button class="btn btn-danger w-100">Charge</button>
+    <button class="btn btn-danger w-100" (click)="submit()">Charge</button>
   </div>
 </div>
